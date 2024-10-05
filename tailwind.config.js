@@ -45,6 +45,10 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-afacad)", ...fontFamily.sans],
       },
+      container: {
+        center: true,
+        padding: "1rem",
+      },
     },
   },
   plugins: [],
