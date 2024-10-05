@@ -11,11 +11,12 @@ export default function Home() {
       <div>
         <p className="text-center text-secondary-500 text-lg leading-loose">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde sunt
-          repellat placeat iusto libero! Eveniet tenetur ullam mollitia
-          perferendis eaque in earum ratione perspiciatis, aut rem
-          exercitationem necessitatibus, voluptatem nihil!
+          repellat placeat iusto libero!
+          <br /> Eveniet tenetur ullam mollitia perferendis eaque in earum
+          ratione perspiciatis,
+          <br /> aut rem exercitationem necessitatibus, voluptatem nihil!
         </p>
-        <div className="flex justify-center gap-x-8 w-full mt-10">
+        <div className="flex justify-center gap-x-7 w-full mt-10">
           <Button variant="outline">
             <Link href="/blogs">Explore the blogs</Link>
           </Button>
