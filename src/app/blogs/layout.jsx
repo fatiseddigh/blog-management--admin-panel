@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import CategoryList from "./_components/CategoryList";
+import Spinner from "@/ui/Spinner";
 
 export const metadata = {
   title: "Blogs",
@@ -12,7 +14,9 @@ function layout({ children }) {
           {children}
         </div>
         <div className="col-span-12 lg:col-span-4 xl:col-span-3 text-secondary-500 space-y-5 ">
-          <CategoryList />
+          <Suspense fallback={<Spinner />}>
+            <CategoryList />
+          </Suspense>
         </div>
       </div>
     </div>
