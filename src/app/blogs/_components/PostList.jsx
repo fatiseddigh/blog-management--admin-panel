@@ -1,16 +1,54 @@
+import Image from "next/image";
+import CoverImage from "./CoverImage";
+import Link from "next/link";
+import { ClockIcon } from "@heroicons/react/24/outline";
+import Avatar from "@/ui/Avatar";
+import PostInteraction from "./PostInteraction";
+
 async function PostList() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post/list`);
-  if (res) {
-    const {
-      data: { posts },
-    } = await res.json();
-  }
+  const {
+    data: { posts },
+  } = await res.json();
 
-  return posts?.length > 0
-    ? posts.map((post) => {
-        return <div key={post.id}>{post.title}</div>;
-      })
-    : null;
+  return posts.length > 0 ? (
+    <div className="grid grid-cols-12 gap-8">
+      {posts.map((post) => {
+        return (
+          <div
+            className="col-span-12 sm:col-span-6 lg:col-span-3 border border-secondary-300 p-2 rounded-lg"
+            key={post.id}
+          >
+            <CoverImage {...post} />
+            <div>
+              <Link href={`/blogs/${post.slug}`}>
+                <h2 className="mb-4 font-bold text-secondary-700 hover:text-primary-900 transition-all ease-out">
+                  {post.title}
+                </h2>
+              </Link>
+
+              {/* post author - readingTime */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center text-[10px] text-secondary-500">
+                  <ClockIcon className="w-4 h-4 stroke-secondary-500 ml-1" />
+                  <span className="ml-1"> Read:</span>
+                  <span className="ml-1 leading-3">{post.readingTime}</span>
+                  <span>Min</span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span className="text-sm text-secondary-500">
+                    {post.author.name}
+                  </span>
+                  <Avatar src={post.author.avatarUrl} />
+                </div>
+              </div>
+              <PostInteraction />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  ) : null;
 }
 
 export default PostList;
