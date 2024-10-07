@@ -1,15 +1,22 @@
+import { getPostBySlug, getPosts } from "@/services/postServices";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-// import RelatedPost from "../_components/RelatedPost";
-// import PostComment from "../_components/comment/PostComment";
 
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  const slugs = posts.map((post) => ({ postSlug: post.slug }));
+  return slugs;
+}
+export async function generateMetadata({ params }) {
+  const post = await getPostBySlug(params.postSlug);
+  return {
+    title: ` ${post.title} post`,
+  };
+}
 async function SinglePost({ params }) {
-  //   await new Promise((res) => setTimeout(res, 2000));
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/post/slug/${params.postSlug}`
-  );
-  const { data } = await res.json();
-  const { post } = data || {};
+  const post = await getPostBySlug(params.postSlug);
   if (!post) notFound();
   return (
     <div className="text-secondary-600 max-w-screen-md mx-auto">
