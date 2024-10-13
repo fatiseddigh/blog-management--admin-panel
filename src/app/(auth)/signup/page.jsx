@@ -3,9 +3,30 @@ import Button from "@/ui/Button";
 import RHFTextField from "@/ui/RHFTextField";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup
+  .object({
+    name: yup
+      .string()
+      .min(5, "Full name is invalid")
+      .max(30)
+      .required("full name is required"),
+    email: yup.string().email("Email is invalid").required("Email is required"),
+    password: yup.string().required("Password is required"),
+  })
+  .required();
 
 function SignUp() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isLoading },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onTouched",
+  });
   const onSubmit = (values) => {
     console.log(values);
   };
@@ -20,20 +41,22 @@ function SignUp() {
           name="name"
           register={register}
           isRequired
+          errors={errors}
         />
         <RHFTextField
           label="email"
           name="email"
           register={register}
           isRequired
+          errors={errors}
         />
         <RHFTextField
           label="password"
           name="password"
           register={register}
           type="password"
-          dir="ltr"
           isRequired
+          errors={errors}
         />
         <div>
           <Button type="submit" variant="primary" className="w-full">
