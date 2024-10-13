@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { singinApi } from "@/services/authService";
+import { useAuth } from "@/context/authContext";
 
 const schema = yup
   .object({
@@ -24,15 +25,10 @@ function SignIn() {
     mode: "onTouched",
   });
 
+  const { signin } = useAuth();
+
   const onSubmit = async (values) => {
-    try {
-      const { user, message } = await singinApi(values);
-      console.log(user);
-      toast.success(message);
-      // router.push("/profile");
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    }
+    await signin(values);
   };
 
   return (

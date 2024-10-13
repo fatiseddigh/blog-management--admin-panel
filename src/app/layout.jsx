@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import afacadFont from "@/constants/afacadFont";
+import AuthProvider from "@/context/AuthContext";
 import "@/styles/globals.css";
 import { Toaster } from "react-hot-toast";
 
@@ -15,9 +16,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${afacadFont.variable} antialiased`}>
-        <Toaster />
-        <Header />
-        <div className={"container xl:max-w-screen-xl"}>{children}</div>
+        <AuthProvider>
+          <Toaster />
+          <Header />
+          <div className={"container xl:max-w-screen-xl"}>{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );
