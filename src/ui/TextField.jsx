@@ -3,7 +3,7 @@ function TextField({
   label,
   name,
   value,
-  dir = "rtl",
+  dir = "ltr",
   onChange,
   isRequired,
   className,
