@@ -28,9 +28,9 @@ function SignUp() {
     resolver: yupResolver(schema),
     mode: "onTouched",
   });
-  const { signin } = useAuth();
+  const { signup } = useAuth();
   const onSubmit = async (values) => {
-    await signin(values);
+    await signup(values);
   };
   return (
     <div>
