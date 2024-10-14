@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
-import { singinApi } from "@/services/authService";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = yup
   .object({
@@ -26,7 +25,7 @@ function SignIn() {
   });
 
   const { signin } = useAuth();
-
+  console.log(useAuth());
   const onSubmit = async (values) => {
     await signin(values);
   };

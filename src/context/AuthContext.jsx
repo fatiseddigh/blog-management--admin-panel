@@ -1,8 +1,8 @@
 "use client";
 
-import { signupApi, singinApi } from "@/services/authService";
-import { createContext, useReducer, useContext } from "react";
+import { getUserApi, signupApi, singinApi } from "@/services/authService";
 import { useRouter } from "next/navigation";
+import { createContext, useReducer, useContext, useEffect } from "react";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
@@ -13,6 +13,7 @@ const initialState = {
   isLoading: true,
   error: null,
 };
+
 const authReducer = (state, action) => {
   switch (action.type) {
     case "loading":
@@ -43,6 +44,7 @@ const authReducer = (state, action) => {
       };
   }
 };
+
 export default function AuthProvider({ children }) {
   const router = useRouter();
   const [{ user, isAuthenticated, isLoading, error }, dispatch] = useReducer(
@@ -54,6 +56,8 @@ export default function AuthProvider({ children }) {
     dispatch({ type: "loading" });
     try {
       const { user, message } = await singinApi(values);
+      console.log(user, "use");
+
       dispatch({ type: "signin", payload: user });
       toast.success(message);
       router.push("/profile");
@@ -77,6 +81,28 @@ export default function AuthProvider({ children }) {
       toast.error(errorMsg);
     }
   }
+
+  async function getUser() {
+    dispatch({ type: "loading" });
+    try {
+      //   await new Promise((resolve) => setTimeout(resolve, 3000));
+      const { user } = await getUserApi();
+      dispatch({ type: "user/loaded", payload: user });
+      console.log(user, "jiiii");
+    } catch (error) {
+      const errorMsg = error?.response?.data?.message;
+      dispatch({ type: "rejected", payload: errorMsg });
+      // toast.error(errorMsg);
+    }
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      await getUser();
+    }
+    fetchData();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{ user, isAuthenticated, isLoading, signin, signup }}
@@ -85,7 +111,6 @@ export default function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
-
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) throw new Error("not found Auth Context");
