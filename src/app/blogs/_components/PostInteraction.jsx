@@ -1,5 +1,5 @@
 "use client";
-import { likePostApi } from "@/services/postServices";
+import { bookmarkPostApi, likePostApi } from "@/services/postServices";
 import ButtonIcon from "@/ui/ButtonIcon";
 import {
   BookmarkIcon,
@@ -26,6 +26,15 @@ function PostInteraction({ post }) {
       toast.error(error?.response?.data?.message);
     }
   };
+  const bookmarkHandler = async (postId) => {
+    try {
+      const { message } = await bookmarkPostApi(postId);
+      toast.success(message);
+      router.refresh();
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
   return (
     <div className="flex items-center gap-x-4">
       <ButtonIcon variant="secondary">
@@ -35,8 +44,8 @@ function PostInteraction({ post }) {
       <ButtonIcon variant="red" onClick={() => likeHandler(post._id)}>
         {post.isLiked ? <SolidHeartIcon /> : <HeartIcon />}
       </ButtonIcon>
-      <ButtonIcon variant="primary">
-        <BookmarkIcon />
+      <ButtonIcon variant="primary" onClick={() => bookmarkHandler(post._id)}>
+        {post.isBookmarked ? <SolidBookmarkIcon /> : <BookmarkIcon />}
       </ButtonIcon>
     </div>
   );
