@@ -4,12 +4,14 @@ import Link from "next/link";
 import { ClockIcon } from "@heroicons/react/24/outline";
 import Avatar from "@/ui/Avatar";
 import PostInteraction from "./PostInteraction";
+import { cookies } from "next/headers";
+import setCookieOnReq from "@/utils/setCookieOnReq";
+import { getPosts } from "@/services/postServices";
 
 async function PostList() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post/list`);
-  const {
-    data: { posts },
-  } = await res.json();
+  const cookieStore = cookies();
+  const options = setCookieOnReq(cookieStore);
+  const posts = await getPosts(options);
 
   return posts.length > 0 ? (
     <div className="grid grid-cols-12 gap-8">
@@ -42,7 +44,7 @@ async function PostList() {
                   <Avatar src={post.author.avatarUrl} />
                 </div>
               </div>
-              <PostInteraction />
+              <PostInteraction post={post} />
             </div>
           </div>
         );
