@@ -1,16 +1,30 @@
-import { Suspense } from "react";
-import Spinner from "@/ui/Spinner";
 import PostList from "../_components/PostList";
+import { cookies } from "next/headers";
+import setCookieOnReq from "@/utils/setCookieOnReq";
+import { getPosts } from "@/services/postServices";
+import queryString from "query-string";
 
-async function page() {
+async function BlagPage({ searchParams }) {
+  const queries = queryString.stringify(searchParams);
+  const cookieStore = cookies();
+  const options = setCookieOnReq(cookieStore);
+  const posts = await getPosts(queries, options);
+  const { search } = searchParams;
+  const resultText = posts.length > 1 ? "results" : "result";
+
   return (
-    <div>
-      <p className="text-secondary-500 mb-5"> this is blog</p>
-      <Suspense fallback={<Spinner />}>
-        <PostList />
-      </Suspense>
-    </div>
+    <>
+      {search ? (
+        <p className="mb-4 text-secondary-700">
+          {posts.length === 0
+            ? " we couldn`t find any post for "
+            : `showing ${posts.length} results for ${resultText}`}
+          <span className="font-bold">&quot;{search}&quot;</span>
+        </p>
+      ) : null}
+      <PostList posts={posts} />
+    </>
   );
 }
 
-export default page;
+export default BlagPage;
