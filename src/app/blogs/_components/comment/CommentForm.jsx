@@ -3,8 +3,9 @@
 import { createComment } from "@/lib/actions";
 import SubmitButton from "@/ui/SubmitButton";
 import TextArea from "@/ui/TextArea";
-import { useState, useActionState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useFormState } from "react-dom";
 
 const initilaState = {
   error: "",
@@ -13,7 +14,7 @@ const initilaState = {
 
 function CommentForm({ postId, parentId, onClose }) {
   const [text, setText] = useState("");
-  const [state, formAction] = useActionState(createComment, initilaState); // useFormState in React V 18.
+  const [state, formAction] = useFormState(createComment, initilaState); // useFormState in React V 18.
 
   useEffect(() => {
     if (state?.message) {
